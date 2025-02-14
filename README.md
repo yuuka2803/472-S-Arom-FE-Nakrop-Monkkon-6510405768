@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Feature
 
-## Getting Started
+### Task Management
 
-First, run the development server:
+- สร้างงานใหม่ (Task): ผู้ใช้สามารถเพิ่มรายการงานที่ต้องทำได้
+- จัดหมวดหมู่งาน (Tag): สามารถจัดหมวดหมู่หรือประเภทของงานต่างๆได้ โดยการเลือก Tag
+- ติดตามสถานะ: สามารถทำเครื่องหมายว่าเสร็จแล้ว (Complete) หรือลบงานเมื่อไม่ต้องการได้
+
+### Diary 
+
+- Add emotional: ผู้ใช้สามารถเลือกอารมณ์ที่สอดคล้องกับความรู้สึกของตนเองในแต่ละวันได้
+บันทึกประจำวัน: ผู้ใช้สามารถเขียนสิ่งที่เกิดในวันนั้นๆลงในหน้า Diary ได้
+
+### Calendar
+
+- มุมมองปฏิทิน: แสดงงานที่สร้างและอารมณ์ที่บันทึกไว้ตามวันนั้นๆ ในรูปแบบปฏิทินรายเดือนและรายสัปดาห์
+
+### การติดตั้ง web application
+
+```bash
+cd arom-web-frontend
+```
+
+```bash
+cp .env.example .env
+```
+
+
+```bash
+npm install
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### ข้อมูลผู้พัฒนา
+- นายกฤษฎิ์พิรัชย์ ชัยวงศ์ 6510405300
+- นางสาว ปวีณ์ธิดา รอดฮวบ 6510405644
+- นางสาว ยูกะ คาวาอิ 6510405768
+- นาวสาว วรพา จันทร์กลาง 6510405776
+- นางสาว ภาพตะวัน สุขุม 6510405733
