@@ -37,11 +37,12 @@ export default function EmotionButton({
         }}
       >
         <button onClick={handleNavigation}>
-          <Image
-            src={imageSrc}
+          <img
+            src={typeof imageSrc === "string" ? imageSrc : imageSrc.src}
             alt={altText}
             width={imageSize}
             height={imageSize}
+            className="w-[120px] h-[120px] object-contain"
           />
         </button>
       </CoolMode>

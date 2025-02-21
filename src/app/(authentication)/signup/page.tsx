@@ -64,8 +64,6 @@ export default function SignUpPage() {
         password: values.password,
         profile_image: values.profileImage
       }
-      console.log(signUpData);
-      console.log(typeof(signUpData.profile_image));
       await registerUser(signUpData)
       router.replace('/login')
     } catch (error) {

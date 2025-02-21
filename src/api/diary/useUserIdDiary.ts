@@ -6,7 +6,6 @@ import diaryQueryKey from "./diaryQueryKey";
 const fetchUserIdDiary = async (id: string ) => {
 
     const response = await axios.get<Diary[]>(`/diary/user/${id}`,)
-    console.log(response.data)
 
     return response.data;
 }

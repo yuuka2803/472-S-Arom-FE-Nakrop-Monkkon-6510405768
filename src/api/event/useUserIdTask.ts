@@ -8,8 +8,6 @@ import taskQueryKey from "./taskQueryKey";
 const fetchUserIdTask = async (id: string ) => {
 
     const response = await axios.get<Task[]>(`/event/user/${id}`,)
-    console.log(response.data)
-
     return response.data;
 }
 

@@ -59,7 +59,6 @@ export default function LoginPage() {
       const token = localStorage.getItem("jwtToken");
       const decoded = token ? jwtDecode(token) : null;
       setDecodedToken(decoded);
-      console.log(decoded);
 
       setLoginError(null);
       router.replace("/calendar")

@@ -6,13 +6,13 @@ export function CoolModeCustom() {
     <div className="relative justify-center">
       <CoolMode
         options={{        
-            particle: "https://i.postimg.cc/Gt0NqnXJ/inLove.png",
+            particle: "https://i.postimg.cc/Gt0NqnXJ/InLove.png",
             size: 100,
             speedUp: 4,
         }}
       >
         <button> 
-            <img src="https://i.postimg.cc/Gt0NqnXJ/inLove.png"
+            <img src="https://i.postimg.cc/Gt0NqnXJ/InLove.png"
         
         /></button>
       </CoolMode>
