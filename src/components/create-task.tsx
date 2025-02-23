@@ -1,40 +1,34 @@
-'use client'
-
+"use client"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus } from "lucide-react"
-import { CreateTask } from "@/interface/Task"
+import { Plus, Tags } from "lucide-react"
+import type { CreateTask } from "@/interface/Task"
 import useCreateTask from "@/api/event/useCreateTask"
 import { useRouter } from "next/navigation"
 
-type TagType = "Personal" | "Work" | "Study"
+type TagType = string
 
 interface AddTaskProps {
   onAddTask: (task: CreateTask) => Promise<void>
   userId: string
 }
 
+const defaultTags = [
+  { value: "Personal", label: "Personal" },
+  { value: "Work", label: "Work" },
+  { value: "Study", label: "Study" },
+]
+
 export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const createTask = useCreateTask()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [newTagDialogOpen, setNewTagDialogOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startDate, setStartDate] = useState("")
@@ -42,6 +36,23 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const [endDate, setEndDate] = useState("")
   const [endTime, setEndTime] = useState("")
   const [selectedTag, setSelectedTag] = useState<TagType>("Personal")
+  const [newTagName, setNewTagName] = useState("")
+  const [customTags, setCustomTags] = useState<Array<{ value: string; label: string }>>([])
+
+  
+  const allTags = [...defaultTags, ...customTags]
+
+  const handleAddNewTag = () => {
+    if (newTagName.trim()) {
+      const newTag = {
+        value: newTagName.trim(),
+        label: newTagName.trim(),
+      }
+      setCustomTags((prev) => [...prev, newTag])
+      setNewTagName("")
+      setNewTagDialogOpen(false)
+    }
+  }
 
   const handleAddTask = async () => {
     if (title.trim() && startDate && startTime && endDate && endTime) {
@@ -50,7 +61,7 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
       const newTask: CreateTask = {
         title: title,
         description: description,
-        start:startDateTime,
+        start: startDateTime,
         end: endDateTime,
         tag: selectedTag,
         user_id: userId,
@@ -78,105 +89,106 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="w-full justify-start text-muted-foreground"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Task
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-arom_brown text-xl ">
-            Add New Task
-          </DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="task">Task Name</Label>
-            <Input
-              id="task"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter task name"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter task description"
-              rows={3}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="startDate">Start Date</Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="startTime">Start Time</Label>
-              <Input
-                id="startTime"
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="endDate">End Date</Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="endTime">End Time</Label>
-              <Input
-                id="endTime"
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="tag">Tag</Label>
-            <Select
-              value={selectedTag}
-              onValueChange={(value: TagType) => setSelectedTag(value)}
-            >
-              <SelectTrigger id="tag">
-                <SelectValue placeholder="Select a tag" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Personal">Personal</SelectItem>
-                <SelectItem value="Work">Work</SelectItem>
-                <SelectItem value="Study">Study</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="flex justify-end">
-          <Button className="bg-arom_brown" onClick={handleAddTask}>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="w-full justify-start text-muted-foreground">
+            <Plus className="mr-2 h-4 w-4" />
             Add Task
           </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-arom_brown text-xl">Add New Task</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="task">Task Name</Label>
+              <Input id="task" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter task name" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter task description"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="startDate">Start Date</Label>
+                <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="startTime">Start Time</Label>
+                <Input id="startTime" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="endDate">End Date</Label>
+                <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="endTime">End Time</Label>
+                <Input id="endTime" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="tag">Tag</Label>
+                <Dialog open={newTagDialogOpen} onOpenChange={setNewTagDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Tags className="mr-2 h-4 w-4" />
+                      Add New Tag
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Create New Tag</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="newTag">Tag Name</Label>
+                        <Input
+                          id="newTag"
+                          value={newTagName}
+                          onChange={(e) => setNewTagName(e.target.value)}
+                          placeholder="Enter new tag name"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <Button onClick={handleAddNewTag}>Create Tag</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <Select value={selectedTag} onValueChange={setSelectedTag}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a tag" />
+                </SelectTrigger>
+                <SelectContent>
+                  {allTags.map((tag) => (
+                    <SelectItem key={tag.value} value={tag.value}>
+                      {tag.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button className="bg-arom_brown" onClick={handleAddTask}>
+              Add Task
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
+
