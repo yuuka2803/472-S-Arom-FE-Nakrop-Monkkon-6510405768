@@ -182,36 +182,6 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="tag">Tag</Label>
-                <Dialog
-                  open={newTagDialogOpen}
-                  onOpenChange={setNewTagDialogOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Tags className="mr-2 h-4 w-4" />
-                      Add New Tag
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Create New Tag</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="newTag">Tag Name</Label>
-                        <Input
-                          id="newTag"
-                          value={newTagName}
-                          onChange={(e) => setNewTagName(e.target.value)}
-                          placeholder="Enter new tag name"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-end">
-                      <Button onClick={handleAddNewTag}>Create Tag</Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
               </div>
               <Select value={selectedTag} onValueChange={setSelectedTag}>
                 <SelectTrigger>
