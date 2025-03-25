@@ -48,24 +48,8 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedTag, setSelectedTag] = useState<TagType>("Personal");
-  const [newTagName, setNewTagName] = useState("");
-  const [customTags, setCustomTags] = useState<
-    Array<{ value: string; label: string }>
-  >([]);
 
-  const allTags = [...defaultTags, ...customTags];
-
-  const handleAddNewTag = () => {
-    if (newTagName.trim()) {
-      const newTag = {
-        value: newTagName.trim(),
-        label: newTagName.trim(),
-      };
-      setCustomTags((prev) => [...prev, newTag]);
-      setNewTagName("");
-      setNewTagDialogOpen(false);
-    }
-  };
+  const allTags = [...defaultTags];
 
   const handleAddTask = async () => {
     if (title.trim() && startDate && startTime && endDate && endTime) {

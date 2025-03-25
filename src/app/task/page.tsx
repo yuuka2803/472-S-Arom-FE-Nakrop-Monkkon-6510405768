@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -22,8 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { CreateTag, UpdateTag } from "@/interface/Tag";
+import useCreateTag from "@/api/tag/useCreateTag";
+import useUserIdTag from "@/api/tag/useUserIdTag";
+import deleteTag from "@/api/tag/useDeleteTag";
+import useUpdateTag from "@/api/tag/useUpdateTag";
 
-type TagType = "Personal" | "Work" | "Study" | "All";
+type TagType = string;
 
 const tagColor = "bg-arom_brown hover:bg-arom_brown";
 
@@ -130,16 +134,51 @@ function TagFilter({
   currentFilter: TagType;
   onFilterChange: (tag: TagType) => void;
 }) {
-  const [tags, setTags] = useState<TagType[]>([
-    "All",
-    "Personal",
-    "Work",
-    "Study",
-  ]);
+  const createTag = useCreateTag();
+  const updateTag = useUpdateTag();
   const [editingTag, setEditingTag] = useState<TagType | null>(null);
   const [editValue, setEditValue] = useState<TagType>("All");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newTagName, setNewTagName] = useState<string>("");
+  const [newTag, setNewTag] = useState<string>("");
+  const [isHasToken, setIsHasToken] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      setIsHasToken(true);
+      setUserData(jwtDecode(token));
+    } else {
+      setIsHasToken(false);
+    }
+  }, []);
+
+  const userId = userData?.user_id;
+  console.log("User ID:", userId);
+
+  const {
+    data: fetchedTags,
+    isLoading,
+    error,
+  } = useUserIdTag(userData?.user_id);
+
+  const [tags, setTags] = useState<string[]>(["All"]);
+  const [tagMap, setTagMap] = useState<Map<string, string>>(new Map());
+
+  useEffect(() => {
+    if (fetchedTags) {
+      const tagNames = fetchedTags.map((tag) => tag.name);
+      const tagMapTemp = new Map(
+        fetchedTags.map((tag) => [tag.id.toString(), tag.name]) // Map to get id -> name
+      );
+      setTags(["All", ...tagNames]);
+      setTagMap(tagMapTemp);
+    }
+  }, [fetchedTags]);
+
+  console.log("Tags:", tags);
+  console.log("Tag Map:", tagMap);
 
   const handleEdit = (tag: TagType, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent tag selection when clicking edit
@@ -147,52 +186,65 @@ function TagFilter({
     setEditValue(tag);
   };
 
-  const handleSaveEdit = (oldTag: TagType, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent tag selection when clicking save
-    if (editValue.trim() === "") return;
-
-    // Update the tags array
-    const newTags = tags.map((tag) =>
-      tag === oldTag ? (editValue as TagType) : tag
-    );
-    setTags(newTags);
-
-    // If the edited tag was selected, update the current filter
-    if (currentFilter === oldTag) {
-      onFilterChange(editValue as TagType);
-    }
-
-    setEditingTag(null);
-  };
+  const handleSaveEdit = async (oldTag: TagType, e: React.MouseEvent) => {};
 
   const handleCancelEdit = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent tag selection when clicking cancel
     setEditingTag(null);
   };
 
-  const handleDelete = (tag: TagType, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent tag selection when clicking delete
+  const handleDelete = async (tagName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
 
-    // Don't allow deleting the "All" tag
-    if (tag === "All") return;
+    if (tagName === "All") return;
 
-    // Remove the tag from the array
-    const newTags = tags.filter((t) => t !== tag);
-    setTags(newTags);
+    // Find the tag ID based on the tag name
+    const tagId = [...tagMap.entries()].find(
+      ([id, name]) => name === tagName
+    )?.[0];
 
-    // If the deleted tag was selected, set filter to "All"
-    if (currentFilter === tag) {
-      onFilterChange("All");
+    if (!tagId) {
+      console.error(`Tag ID not found for tag: ${tagName}`);
+      return;
+    }
+
+    try {
+      console.log(`Deleting tag: ${tagName} with ID: ${tagId}`);
+      await deleteTag(tagId); // Call the API to delete from the database
+
+      // Update the state to remove the deleted tag
+      setTags((prevTags) => prevTags.filter((tag) => tag !== tagName));
+
+      // Remove the deleted tag from tagMap
+      setTagMap((prevMap) => {
+        const newMap = new Map(prevMap);
+        newMap.delete(tagId);
+        return newMap;
+      });
+
+      // If the deleted tag was selected, reset filter to "All"
+      if (currentFilter === tagName) {
+        onFilterChange("All");
+      }
+    } catch (error) {
+      console.error("Failed to delete tag:", error);
     }
   };
 
-  const handleAddTag = () => {
-    if (newTagName.trim() === "") return;
+  const handleAddTag = async () => {
+    if (newTag.trim() === "") return;
 
-    // Add the new tag to the array
-    setTags([...tags, newTagName as TagType]);
-    setNewTagName("");
-    setIsDialogOpen(false);
+    const newTags: CreateTag = {
+      name: newTag,
+      user_id: userId,
+    };
+    try {
+      console.log("New Tag:", newTags);
+      await createTag.mutateAsync(newTags);
+      setIsDialogOpen(false);
+    } catch (err) {
+      console.error("Failed to create tag:", err);
+    }
   };
 
   return (
@@ -288,8 +340,8 @@ function TagFilter({
               </label>
               <Input
                 id="name"
-                value={newTagName}
-                onChange={(e) => setNewTagName(e.target.value)}
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
                 placeholder="Enter tag name"
               />
             </div>
