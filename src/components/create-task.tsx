@@ -19,24 +19,31 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
+import { Plus , Tags } from "lucide-react";
 import { CreateTask } from "@/interface/Task";
 import useCreateTask from "@/api/event/useCreateTask";
 import { useRouter } from "next/navigation";
 import { CheckboxItem } from "@radix-ui/react-dropdown-menu";
 import { Checkbox } from "./ui/checkbox";
 
-type TagType = "Personal" | "Work" | "Study";
+type TagType = string;
 
 interface AddTaskProps {
   onAddTask: (task: CreateTask) => Promise<void>;
   userId: string;
 }
 
+const defaultTags = [
+  { value: "Personal", label: "Personal" },
+  { value: "Work", label: "Work" },
+  { value: "Study", label: "Study" },
+];
+
 export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const createTask = useCreateTask();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [newTagDialogOpen, setNewTagDialogOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -46,6 +53,8 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const [isNotification, setIsNotification] = useState(false);
   const [selectedTag, setSelectedTag] = useState<TagType>("Personal");
   const [selectedTimeRemind, setSelectedTimeRemind] = useState("none");
+
+  const allTags = [...defaultTags];
 
   const handleAddTask = async () => {
     if (title.trim() && startDate && startTime && endDate && endTime) {
