@@ -1,81 +1,89 @@
-'use client'
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Plus } from "lucide-react"
-import { CreateTask } from "@/interface/Task"
-import useCreateTask from "@/api/event/useCreateTask"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus } from "lucide-react";
+import { CreateTask } from "@/interface/Task";
+import useCreateTask from "@/api/event/useCreateTask";
+import { useRouter } from "next/navigation";
+import { CheckboxItem } from "@radix-ui/react-dropdown-menu";
+import { Checkbox } from "./ui/checkbox";
 
-type TagType = "Personal" | "Work" | "Study"
+type TagType = "Personal" | "Work" | "Study";
 
 interface AddTaskProps {
-  onAddTask: (task: CreateTask) => Promise<void>
-  userId: string
+  onAddTask: (task: CreateTask) => Promise<void>;
+  userId: string;
 }
 
 export function AddTask({ onAddTask, userId }: AddTaskProps) {
-  const createTask = useCreateTask()
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [startDate, setStartDate] = useState("")
-  const [startTime, setStartTime] = useState("")
-  const [endDate, setEndDate] = useState("")
-  const [endTime, setEndTime] = useState("")
-  const [selectedTag, setSelectedTag] = useState<TagType>("Personal")
+  const createTask = useCreateTask();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [isNotification, setIsNotification] = useState(false);
+  const [selectedTag, setSelectedTag] = useState<TagType>("Personal");
+  const [selectedTimeRemind, setSelectedTimeRemind] = useState("none");
 
   const handleAddTask = async () => {
     if (title.trim() && startDate && startTime && endDate && endTime) {
-      const startDateTime = `${startDate}T${startTime}:00Z`
-      const endDateTime = `${endDate}T${endTime}:00Z`
+      const startDateTime = `${startDate}T${startTime}:00Z`;
+      const endDateTime = `${endDate}T${endTime}:00Z`;
+
       const newTask: CreateTask = {
         title: title,
         description: description,
-        start:startDateTime,
+        start: startDateTime,
         end: endDateTime,
-        tag: selectedTag,
+        tag: "1b548241-7276-4223-a542-9016c0eb3353", //mock tag id
+        reminder: selectedTimeRemind,
+        notification: isNotification,
         user_id: userId,
-      }
+      };
+
       try {
-        console.log("New Task:", newTask)
-        await createTask.mutateAsync(newTask)
-        router.push("/task")
-        setOpen(false)
-        resetForm()
+        console.log("New Task:", newTask);
+        await createTask.mutateAsync(newTask);
+        setOpen(false);
+        router.push("/task");
+        resetForm();
       } catch (err) {
-        console.error("Failed to create task:", err)
+        console.error("Failed to create task:", err);
       }
     }
-  }
+  };
 
   const resetForm = () => {
-    setTitle("")
-    setDescription("")
-    setStartDate("")
-    setStartTime("")
-    setEndDate("")
-    setEndTime("")
-    setSelectedTag("Personal")
-  }
+    setTitle("");
+    setDescription("");
+    setStartDate("");
+    setStartTime("");
+    setEndDate("");
+    setEndTime("");
+    setSelectedTag("Personal");
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -155,6 +163,24 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
             </div>
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="remind">Notification</Label>
+            <Select
+              value={selectedTimeRemind}
+              onValueChange={(value) => setSelectedTimeRemind(value)}
+            >
+              <SelectTrigger id="remind">
+                <SelectValue placeholder="Select a time" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="None"> None </SelectItem>
+                <SelectItem value="1h"> 1 hour before </SelectItem>
+                <SelectItem value="5h"> 5 hour before </SelectItem>
+                <SelectItem value="24h"> 1 day before </SelectItem>
+                <SelectItem value="48h"> 2 day before </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="tag">Tag</Label>
             <Select
               value={selectedTag}
@@ -170,7 +196,17 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
               </SelectContent>
             </Select>
           </div>
+          <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-arom_brown p-4 ">
+            <Checkbox
+              checked={isNotification}
+              onCheckedChange={(checked) => setIsNotification(Boolean(checked))}
+            />
+            <div className="space-y-1 leading-none">
+              <p>Send an email with task details</p>
+            </div>
+          </div>
         </div>
+
         <div className="flex justify-end">
           <Button className="bg-arom_brown" onClick={handleAddTask}>
             Add Task
@@ -178,5 +214,5 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

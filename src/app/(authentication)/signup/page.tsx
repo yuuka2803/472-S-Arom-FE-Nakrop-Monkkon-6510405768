@@ -29,6 +29,9 @@ const signUpSchema = z
     confirmPassword: z.string().min(8, {
       message: "Password must be at least 8 characters.",
     }),
+    email: z.string().email({
+      message: "Please enter a valid email address.",
+    }),
     profileImage: z.instanceof(File).refine((file) => file.size <= 5000000, {
       message: "The file should be less than 5MB.",
     }),
@@ -54,6 +57,7 @@ export default function SignUpPage() {
       username: "",
       password: "",
       confirmPassword: "",
+      email: "",
     },
   });
 
@@ -62,6 +66,7 @@ export default function SignUpPage() {
       const signUpData = {
         username: values.username,
         password: values.password,
+        email: values.email,
         profile_image: values.profileImage
       }
       await registerUser(signUpData)
@@ -150,6 +155,28 @@ export default function SignUpPage() {
                   </p>
                 )}
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label
+                htmlFor="email"
+                className="text-base pl-2 text-arom_gray"
+              >
+                Email
+              </Label>
+              <div className="relative">
+                <Input
+                  id="email"
+                  {...register("email")}
+                  type="email"
+                  placeholder="Enter your email"
+                  className=" placeholder:text-arom_brown"
+                />
+              </div>
+              {errors.email && (
+                <p className="text-sm text-arom_orange-100 pl-2">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label

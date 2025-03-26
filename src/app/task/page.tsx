@@ -11,6 +11,8 @@ import useUserIdTask from "@/api/event/useUserIdTask";
 import { useRouter } from "next/navigation";
 import { AddTask } from "@/components/create-task";
 import useUpdateTask from "@/api/event/useUpdateTask";
+import useUpdateStatusTask from "@/api/event/useStatusUpdateTask";
+import { MdEdit } from "react-icons/md";
 
 type TagType = "Personal" | "Work" | "Study" | "All";
 
@@ -27,14 +29,18 @@ export default function TaskPage() {
     if (token) {
       setIsHasToken(true);
       setUserData(jwtDecode(token));
+      
     } else {
       setIsHasToken(false);
     }
   }, []);
 
   const createTask = useCreateTask();
-  const updateTask = useUpdateTask();
-  const { data: tasks, isLoading, error } = useUserIdTask(userData?.user_id);
+  const updateStatusTask = useUpdateStatusTask(); 
+  const { data: tasks, isLoading, error } = useUserIdTask(userData?.user_id, {
+    enabled: !!userData?.user_id, // เรียกใช้งานก็ต่อเมื่อ user_id มีค่า
+  });
+
 
   const router = useRouter();
 
@@ -43,11 +49,11 @@ export default function TaskPage() {
       const storedTasks = localStorage.getItem("tasks");
       if (storedTasks) {
         const parsedTasks = JSON.parse(storedTasks);
-        const updatedTasks = tasks.map((task: Task) => ({
+        const updatedStatusTask = tasks.map((task: Task) => ({
           ...task,
           complete: parsedTasks[task.id]?.complete ?? task.complete,
         }));
-        setLocalTasks(updatedTasks);
+        setLocalTasks(updatedStatusTask);
       } else {
         setLocalTasks(tasks);
       }
@@ -64,19 +70,19 @@ export default function TaskPage() {
   };
 
   const toggleTaskCompletion = async (taskId: string, complete: boolean) => {
-    const updatedTasks = localTasks.map((task) =>
+    const updatedStatusTask = localTasks.map((task) =>
       task.id === taskId ? { ...task, complete: !complete } : task
     );
-    setLocalTasks(updatedTasks);
+    setLocalTasks(updatedStatusTask);
 
-    const taskCompletionState = updatedTasks.reduce((acc, task) => {
+    const taskCompletionState = updatedStatusTask.reduce((acc, task) => {
       acc[task.id] = { complete: task.complete };
       return acc;
     }, {} as Record<string, { complete: boolean }>);
 
     localStorage.setItem("tasks", JSON.stringify(taskCompletionState));
 
-    await updateTask.mutateAsync({
+    await updateStatusTask.mutateAsync({
       id: taskId,
       task: { completed: !complete },
     });
@@ -85,6 +91,10 @@ export default function TaskPage() {
   const filteredTasks = localTasks.filter(
     (task: Task) => filterTag === "All" || task.tag === filterTag
   );
+  if(isLoading)
+    return <p>Loading.....</p>
+   if(error)
+    return <p>{error.message}</p>
 
   return (
     <div className="flex w-full p-5">
@@ -186,6 +196,7 @@ function TaskItem({
   task: Task;
   toggleTaskCompletion: (taskId: string, complete: boolean) => void;
 }) {
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg">
       <div className="flex items-center gap-4">
@@ -217,6 +228,7 @@ function TaskItem({
         >
           {task.tag}
         </span>
+        <MdEdit onClick={() => router.push(`task/edit/${task.id}`)}/>
       </div>
     </div>
   );

@@ -121,7 +121,7 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
           }}
         >
           <img
-            src={moodImage.src}
+            src={moodImage.src.toString()}
             alt="mood"
             width={120}
             height={100}
