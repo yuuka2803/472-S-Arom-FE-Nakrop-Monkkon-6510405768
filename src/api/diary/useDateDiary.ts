@@ -6,8 +6,6 @@ import diaryQueryKey from "./diaryQueryKey";
 const fetchDateDiary = async (date: string ) => {
 
     const response = await axios.get<Diary>(`/diary/date/${date}`,)
-    console.log(response.data)
-
     return response.data;
 }
 

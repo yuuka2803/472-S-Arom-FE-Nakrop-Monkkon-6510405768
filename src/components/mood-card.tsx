@@ -8,7 +8,6 @@ interface MoodCardProps {
 }
 
 export function MoodCard({ setEmotions, emotions }: MoodCardProps) {
-  console.log(emotions);
   const [selectEmotions, setSelectedEmotions] = useState<string[]>(emotions);
   useEffect(() => {
     setSelectedEmotions(emotions);

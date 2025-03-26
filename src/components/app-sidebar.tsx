@@ -45,8 +45,6 @@ export function AppSidebar() {
     if (token) {
       setIsHasToken(true);
       setUserData(jwtDecode(token));
-      console.log(token);
-      console.log(userData);
     } else {
       setIsHasToken(false);
     }

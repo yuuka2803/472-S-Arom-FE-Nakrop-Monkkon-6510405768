@@ -6,7 +6,6 @@ export const login = async (userLogin: any) => {
   const { data } = await axios.post(`/user/login`, userLogin);
   const jwtToken = data;
   localStorage.setItem("jwtToken", jwtToken.token)
-  console.log(data.token);
   
   return data;
 };

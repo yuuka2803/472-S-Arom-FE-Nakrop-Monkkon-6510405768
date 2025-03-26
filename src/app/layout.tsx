@@ -33,8 +33,10 @@ export default async function RootLayout({
         <div>
           <QueryClientProvider>
             <SidebarProvider defaultOpen={true} >
-            <AppSidebar />
-              <main className="h-screen w-screen bg-arom_white">
+            <div className='flex justify-center max-h-[calc(100vh)] overflow-hidden'>
+              <AppSidebar />
+            </div>
+              <main className='w-screen overflow-y-scroll max-h-[calc(100vh)]'>
                 <Providers>{children}</Providers>
               </main>
             </SidebarProvider>
