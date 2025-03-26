@@ -186,7 +186,21 @@ function TagFilter({
     setEditValue(tag);
   };
 
-  const handleSaveEdit = async (oldTag: TagType, e: React.MouseEvent) => {};
+  const handleSaveEdit = async (oldTag: TagType, e: React.MouseEvent) => {
+    const tagId = [...tagMap.entries()].find(
+      ([id, name]) => name === oldTag
+    )?.[0];
+
+    if (!tagId) {
+      console.error(`Tag ID not found for tag: ${oldTag.toString()}`);
+      return;
+    }
+
+    await updateTag.mutateAsync({
+      id: tagId,
+      tag: { name: editValue },
+    });
+  };
 
   const handleCancelEdit = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent tag selection when clicking cancel
