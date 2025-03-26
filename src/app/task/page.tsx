@@ -28,6 +28,7 @@ import useCreateTag from "@/api/tag/useCreateTag";
 import useUserIdTag from "@/api/tag/useUserIdTag";
 import deleteTag from "@/api/tag/useDeleteTag";
 import useUpdateTag from "@/api/tag/useUpdateTag";
+import useIdTag from "@/api/tag/useIdTag";
 
 type TagType = string;
 
@@ -412,6 +413,7 @@ function TaskItem({
   toggleTaskCompletion: (taskId: string, complete: boolean) => void;
 }) {
   const router = useRouter();
+  const {data:tagName, isLoading, error} = useIdTag(task.tag)
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg">
       <div className="flex items-center gap-4">
@@ -441,7 +443,7 @@ function TaskItem({
         <span
           className={cn("text-white rounded-full px-2 py-1 text-xs", tagColor)}
         >
-          {task.tag}
+          {tagName?.name}
         </span>
         <MdEdit onClick={() => router.push(`task/edit/${task.id}`)}/>
       </div>

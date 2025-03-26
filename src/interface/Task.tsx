@@ -32,6 +32,7 @@ export interface UpdateTask {
   description: string;
   start: string;
   end: string;
+  tag: string;
   notification: boolean;
   reminder: string;
   user_id: string;

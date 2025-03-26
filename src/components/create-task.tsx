@@ -25,6 +25,7 @@ import useCreateTask from "@/api/event/useCreateTask";
 import { useRouter } from "next/navigation";
 import { CheckboxItem } from "@radix-ui/react-dropdown-menu";
 import { Checkbox } from "./ui/checkbox";
+import useUserIdTag from "@/api/tag/useUserIdTag";
 
 type TagType = string;
 
@@ -33,14 +34,9 @@ interface AddTaskProps {
   userId: string;
 }
 
-const defaultTags = [
-  { value: "Personal", label: "Personal" },
-  { value: "Work", label: "Work" },
-  { value: "Study", label: "Study" },
-];
-
 export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const createTask = useCreateTask();
+  
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [newTagDialogOpen, setNewTagDialogOpen] = useState(false);
@@ -51,10 +47,9 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [isNotification, setIsNotification] = useState(false);
-  const [selectedTag, setSelectedTag] = useState<TagType>("Personal");
+  const [selectedTag, setSelectedTag] = useState("");
   const [selectedTimeRemind, setSelectedTimeRemind] = useState("none");
-
-  const allTags = [...defaultTags];
+  const {data:tags,isLoading,error} = useUserIdTag(userId);
 
   const handleAddTask = async () => {
     if (title.trim() && startDate && startTime && endDate && endTime) {
@@ -66,7 +61,7 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
         description: description,
         start: startDateTime,
         end: endDateTime,
-        tag: "1b548241-7276-4223-a542-9016c0eb3353", //mock tag id
+        tag: selectedTag,
         reminder: selectedTimeRemind,
         notification: isNotification,
         user_id: userId,
@@ -199,9 +194,9 @@ export function AddTask({ onAddTask, userId }: AddTaskProps) {
                 <SelectValue placeholder="Select a tag" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Personal">Personal</SelectItem>
-                <SelectItem value="Work">Work</SelectItem>
-                <SelectItem value="Study">Study</SelectItem>
+                {tags?.map((tag)=>(
+                    <SelectItem value={tag.id}>{tag.name}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

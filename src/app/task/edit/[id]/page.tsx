@@ -16,6 +16,7 @@ import { Label } from "@radix-ui/react-label";
 import { useParams, useRouter } from "next/navigation";
 import { set } from "zod";
 import useUpdateTask from "@/api/event/useUpdateTask";
+import useUserIdTag from "@/api/tag/useUserIdTag";
 const reminderOptions = {
   None: "None",
   "1h": "1 hour before",
@@ -36,8 +37,9 @@ export default function EditTask() {
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [selectedTag, setSelectedTag] = useState("Personal");
+  const [selectedTag, setSelectedTag] = useState("");
   const [selectedTimeRemind, setSelectedTimeRemind] = useState<string>("none");
+  const {data:tags,isLoading:isTagLoading,error:isTagError} = useUserIdTag(task?.user_id || "");
   const onSubmit = async () => {
     if (title.trim() && startDate && startTime && endDate && endTime && task) {
       const startDateTime = `${startDate}T${startTime}:00Z`;
@@ -48,7 +50,7 @@ export default function EditTask() {
         description: description,
         start: startDateTime,
         end: endDateTime,
-        // tag: selectedTag,
+        tag: selectedTag,
         notification: task?.notification,
         reminder: selectedTimeRemind,
         user_id: task.user_id
@@ -174,13 +176,13 @@ export default function EditTask() {
           onValueChange={(value) => setSelectedTag(value)}
         >
           <SelectTrigger id="tag">
-            <SelectValue>{task?.tag}</SelectValue>
+            <SelectValue/>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Personal">Personal</SelectItem>
-            <SelectItem value="Work">Work</SelectItem>
-            <SelectItem value="Study">Study</SelectItem>
-          </SelectContent>
+                {tags?.map((tag)=>(
+                    <SelectItem value={tag.id}>{tag.name}</SelectItem>
+                ))}
+              </SelectContent>
         </Select>
       </div>
       <Button
