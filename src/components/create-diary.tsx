@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import useCreateDiary from "@/api/diary/useCreateDiary";
 import { useState, useEffect, use } from "react";
 import useDateDiary from "@/api/diary/useDateDiary";
@@ -21,7 +21,7 @@ const moodImages: { [key: string]: string } = {
   Angry: require("@/app/img/Angry.png"),
   Anxious: require("@/app/img/Anxious.png"),
   Happy: require("@/app/img/Happy.png"),
-  InLove: require("@/app/img/InLove.png"),
+  InLove: require("@/app/img/inLove.png"),
   Sad: require("@/app/img/Sad.png"),
   Silly: require("@/app/img/Silly.png"),
   SoSo: require("@/app/img/SoSo.png"),
@@ -29,24 +29,24 @@ const moodImages: { [key: string]: string } = {
 
 export default function CreateDiary({ date, mood }: CreateDiaryProps) {
   const [isHasToken, setIsHasToken] = useState(false);
-  const [userData, setUserData] = useState<any>()
+  const [userData, setUserData] = useState<any>();
 
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
     if (token) {
       setIsHasToken(true);
-      setUserData(jwtDecode(token))
+      setUserData(jwtDecode(token));
       console.log(token);
       console.log(userData);
     } else {
       setIsHasToken(false);
     }
   }, [setIsHasToken]);
-  const { data:diaries, isLoading, error } = useUserIdDiary(userData?.user_id)
-  console.log("Diary:",diaries);
+  const { data: diaries, isLoading, error } = useUserIdDiary(userData?.user_id);
+  console.log("Diary:", diaries);
 
-  console.log("ThaiDate:",date); 
-  const data = diaries?.find((item) => item.date === `${date}T00:00:00Z`)
+  console.log("ThaiDate:", date);
+  const data = diaries?.find((item) => item.date === `${date}T00:00:00Z`);
   const router = useRouter();
   const createDiary = useCreateDiary();
   const updateDiary = useUpdateDiaries();
@@ -67,7 +67,7 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
 
   useEffect(() => {
     if (data) {
-      console.log("Data:",data);
+      console.log("Data:", data);
       setTypeFunc(true);
       setMoodImage(moodImages[data.mood]);
       setEmotions(data.emotions);
@@ -88,7 +88,6 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
 
   const onSubmit = async () => {
     const new_diary = {

@@ -40,10 +40,10 @@ export default function DisplayDiary({ date }: DisplayDiaryProps) {
 
   // Fetch diary data by user ID
   const { data: diaries, isLoading, error } = useUserIdDiary(userData?.user_id);
-  console.log("Diary:",diaries);
+  console.log("Diary:", diaries);
 
-  const data = diaries?.find((item) => item.date === `${date}T00:00:00Z`)
-console.log("Data:",data , "Date:",date);
+  const data = diaries?.find((item) => item.date === `${date}T00:00:00Z`);
+  console.log("Data:", data, "Date:", date);
   // Set emotions whenever data changes
   useEffect(() => {
     if (data?.emotions) {
@@ -57,7 +57,7 @@ console.log("Data:",data , "Date:",date);
     return <div>Loading...</div>;
   }
 
- if (!data) {
+  if (!data) {
     return (
       <>
         <Divider className="w-full " />
@@ -86,7 +86,10 @@ console.log("Data:",data , "Date:",date);
           {data?.description}
         </p>
       </div>
-      {date === new Date().toLocaleString("sv-SE", { timeZone: "Asia/Bangkok" }).split(" ")[0] && (
+      {date ===
+        new Date()
+          .toLocaleString("sv-SE", { timeZone: "Asia/Bangkok" })
+          .split(" ")[0] && (
         <Button
           className="w-full bg-[#F4ECE5] text-arom_brown border border-arom_brown mt-4"
           onClick={() => {
