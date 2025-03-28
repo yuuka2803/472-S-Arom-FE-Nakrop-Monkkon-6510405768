@@ -2,7 +2,7 @@
 import { useState, useEffect, use } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { IoAddOutline } from "react-icons/io5";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MoodCard } from "./mood-card";
@@ -10,7 +10,7 @@ import { Diary, UpdateDiary } from "@/interface/Diary";
 import useUpdateDiaries from "@/api/diary/useUpdate";
 import { jwtDecode } from "jwt-decode";
 import useUserIdDiary from "@/api/diary/useUserIdDiary";
-import { image } from "@nextui-org/theme";
+import { image } from "@heroui/theme";
 
 interface EditDiaryProps {
   date: string;

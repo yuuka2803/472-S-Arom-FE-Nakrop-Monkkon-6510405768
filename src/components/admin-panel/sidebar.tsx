@@ -6,7 +6,7 @@ import { useSidebar } from "@/hooks/use-sidebar";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
 import { PanelsTopLeft } from "lucide-react";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 import Link from "next/link";
 
 export function Sidebar() {
@@ -36,12 +36,12 @@ export function Sidebar() {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-          <Image 
-                alt="Logo"
-                className={isOpen ? "object-cover" : "object-cover rounded-full"}
-                src= "https://i.postimg.cc/QdHLrWD6/AROM-1.png"       
-                sizes="full"
-          />
+            <Image
+              alt="Logo"
+              className={isOpen ? "object-cover" : "object-cover rounded-full"}
+              src="https://i.postimg.cc/QdHLrWD6/AROM-1.png"
+              sizes="full"
+            />
           </Link>
         </Button>
         <Menu isOpen={getOpenState()} />

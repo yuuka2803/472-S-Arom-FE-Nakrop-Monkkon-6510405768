@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Image from "next/image";
-import { Divider } from "@nextui-org/divider";
+import { Divider } from "@heroui/divider";
 import MoodCardDisplay from "./mood-card-display";
 import { jwtDecode } from "jwt-decode";
 import useUserIdDiary from "@/api/diary/useUserIdDiary";

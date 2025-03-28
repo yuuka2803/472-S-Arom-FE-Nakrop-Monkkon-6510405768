@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import DisplaDiary from "@/components/display-diary";
 import CreateDiary from "@/components/create-diary";
 import useDateDiary from "@/api/diary/useDateDiary";
@@ -25,14 +25,23 @@ export default function DiaryPage() {
     day: "numeric",
     month: "long",
     year: "numeric",
-    timeZone: "Asia/Bangkok"
+    timeZone: "Asia/Bangkok",
   }).format(date);
   const options = { timeZone: "Asia/Bangkok" };
 
-  const year = new Intl.DateTimeFormat("en-GB", { year: "numeric", ...options }).format(date);
-  const month = new Intl.DateTimeFormat("en-GB", { month: "2-digit", ...options }).format(date);
-  const day = new Intl.DateTimeFormat("en-GB", { day: "2-digit", ...options }).format(date);
-  
+  const year = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    ...options,
+  }).format(date);
+  const month = new Intl.DateTimeFormat("en-GB", {
+    month: "2-digit",
+    ...options,
+  }).format(date);
+  const day = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    ...options,
+  }).format(date);
+
   const formattedDateParse = `${year}-${month}-${day}`;
   return (
     <div className="flex flex-col gap-4 w-full px-10 py-5">

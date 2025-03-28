@@ -3,7 +3,7 @@ import useCreateDiary from "@/api/diary/useCreateDiary";
 import { useState, useEffect, use } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { IoAddOutline } from "react-icons/io5";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 import Image, { StaticImageData } from "next/image";
 import { MoodCard } from "./mood-card";
