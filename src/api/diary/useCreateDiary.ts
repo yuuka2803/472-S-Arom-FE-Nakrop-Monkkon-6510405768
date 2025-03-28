@@ -10,7 +10,7 @@ const createDiary = async (diary: CreateDiary) => {
   formData.append("user_id", diary.user_id);
   formData.append("description", diary.description);
 
-  diary.emotions.forEach((emotion:string) => {
+  diary.emotions.forEach((emotion: string) => {
     formData.append("emotions", emotion);
   });
 

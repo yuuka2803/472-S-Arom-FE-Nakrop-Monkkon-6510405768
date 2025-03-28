@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { IoAddOutline } from "react-icons/io5";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MoodCard } from "./mood-card";
@@ -10,20 +10,26 @@ import { Diary, UpdateDiary } from "@/interface/Diary";
 import useUpdateDiaries from "@/api/diary/useUpdate";
 import { jwtDecode } from "jwt-decode";
 import useUserIdDiary from "@/api/diary/useUserIdDiary";
-import { image } from "@nextui-org/theme";
+import AngryImg from "@/app/img/Angry.png";
+import AnxiousImg from "@/app/img/Anxious.png";
+import HappyImg from "@/app/img/Happy.png";
+import InLoveImg from "@/app/img/InLove.png";
+import SadImg from "@/app/img/Sad.png";
+import SillyImg from "@/app/img/Silly.png";
+import SoSoImg from "@/app/img/SoSo.png";
 
 interface EditDiaryProps {
   date: string;
 }
 
 const moodImages: { [key: string]: string } = {
-  Angry: require("@/app/img/Angry.png"),
-  Anxious: require("@/app/img/Anxious.png"),
-  Happy: require("@/app/img/Happy.png"),
-  InLove: require("@/app/img/InLove.png"),
-  Sad: require("@/app/img/Sad.png"),
-  Silly: require("@/app/img/Silly.png"),
-  SoSo: require("@/app/img/SoSo.png"),
+  Angry: AngryImg.src,
+  Anxious: AnxiousImg.src,
+  Happy: HappyImg.src,
+  InLove: InLoveImg.src,
+  Sad: SadImg.src,
+  Silly: SillyImg.src,
+  SoSo: SoSoImg.src,
 };
 
 export default function EditDiary({ date }: EditDiaryProps) {
@@ -52,10 +58,11 @@ export default function EditDiary({ date }: EditDiaryProps) {
   const [moodImage, setMoodImage] = useState<string>("");
   useEffect(() => {
     if (data) {
-      setMoodImage(moodImages[data.mood]);
       setEmotions(data.emotions);
       setDescription(data.description);
       setMood(data.mood);
+      const moodImg = moodImages[data.mood] || "";
+      setMoodImage(moodImg);
       setImagesDiaryURL(data.images);
       setDiary(data);
     }
@@ -75,6 +82,8 @@ export default function EditDiary({ date }: EditDiaryProps) {
       images_url: imagesDiaryURL,
       images: imagesDiary,
     };
+    console.log(new_diary);
+    console.log(moodImage);
     try {
       await updateDiary.mutateAsync({ date: date, diary: new_diary });
       router.push("/diary/display");
@@ -93,13 +102,15 @@ export default function EditDiary({ date }: EditDiaryProps) {
             router.push(navigateTo);
           }}
         >
-          <img
-            src={moodImage}
-            alt="mood"
-            width={130}
-            height={100}
-            className="object-cover"
-          />
+          {moodImage ? (
+            <Image
+              src={moodImage}
+              alt="mood"
+              width={130}
+              height={100}
+              className="object-cover"
+            />
+          ) : null}
           <p className="text-2xl font-semibold">{mood}</p>
         </button>
         <div className="bg-[#F4ECE5] col-span-2 px-5 py-3 h-full flex flex-col">

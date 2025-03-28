@@ -10,25 +10,25 @@ const updateDiaries = async ({
   date: string;
   diary: UpdateDiary;
 }) => {
-    const formData = new FormData();
+  const formData = new FormData();
 
-    formData.append("date", diary.date);
-    formData.append("mood", diary.mood);
-    formData.append("user_id", diary.user_id);
-    formData.append("description", diary.description);
-  
-    diary.emotions.forEach((emotion:string) => {
-      formData.append("emotions", emotion);
-    });
-      
-    diary.images_url.forEach((url:string) => {
-        formData.append("images_url",url);
-      });
-  
-    diary.images.forEach((image: File) => {
-      formData.append("images", image);
-    });
-  const { data } = await axios.patch<Diary>(`/diary/${date}`, formData, {
+  formData.append("date", diary.date);
+  formData.append("mood", diary.mood);
+  formData.append("user_id", diary.user_id);
+  formData.append("description", diary.description);
+
+  diary.emotions.forEach((emotion: string) => {
+    formData.append("emotions", emotion);
+  });
+
+  diary.images_url.forEach((url: string) => {
+    formData.append("images_url", url);
+  });
+
+  diary.images.forEach((image: File) => {
+    formData.append("images", image);
+  });
+  const { data } = await axios.put<Diary>(`/diary/${date}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

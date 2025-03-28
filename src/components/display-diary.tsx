@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Image from "next/image";
-import { Divider } from "@nextui-org/divider";
+import { Divider } from "@heroui/divider";
 import MoodCardDisplay from "./mood-card-display";
 import { jwtDecode } from "jwt-decode";
 import useUserIdDiary from "@/api/diary/useUserIdDiary";
@@ -76,7 +76,7 @@ export default function DisplayDiary({ date }: DisplayDiaryProps) {
         <div className="bg-[#F4ECE5] rounded-md flex justify-center items-center gap-6 px-5">
           {moodImage && (
             <img
-              src={moodImage.src}
+              src={moodImage.src.toString()}
               alt="mood"
               width={130}
               height={100}

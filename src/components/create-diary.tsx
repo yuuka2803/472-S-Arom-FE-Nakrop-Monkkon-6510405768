@@ -1,9 +1,9 @@
 "use client";
 import useCreateDiary from "@/api/diary/useCreateDiary";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { IoAddOutline } from "react-icons/io5";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 import Image, { StaticImageData } from "next/image";
 import { MoodCard } from "./mood-card";
@@ -68,20 +68,18 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
     images: [],
   });
   const [moodImage, setMoodImage] = useState<StaticImageData>(moodImages[mood]);
-
   useEffect(() => {
     if (data) {
       setTypeFunc(true);
-      setMoodImage(moodImages[data.mood]);
       setEmotions(data.emotions);
       setDescription(data.description);
       setMoodSet(data.mood);
+      setMoodImage(moodImages[data.mood]);
       setImagesDiaryURL(data.images);
       setDiary(data);
     }
   }, [data]);
 
-  // Update mood image and mood set when mood prop changes
   useEffect(() => {
     if (mood !== "") {
       setMoodImage(moodImages[mood]);
@@ -121,7 +119,7 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
           }}
         >
           <img
-            src={moodImage.src}
+            src={moodImage?.src.toString() || ""}
             alt="mood"
             width={120}
             height={100}

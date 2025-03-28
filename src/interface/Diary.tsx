@@ -19,14 +19,14 @@ export interface CreateDiary {
 }
 
 export interface UpdateDiary {
-    date: string;
-    mood: string;
-    emotions: string[];
-    description: string;
-    user_id: string;
-    images_url: string[];
-    images: File[];
-  }
+  date: string;
+  mood: string;
+  emotions: string[];
+  description: string;
+  user_id: string;
+  images_url: string[];
+  images: File[];
+}
 export interface ShowDiary {
   id: string;
   date: Date;
