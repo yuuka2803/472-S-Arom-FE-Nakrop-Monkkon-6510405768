@@ -13,7 +13,7 @@ import useUserIdDiary from "@/api/diary/useUserIdDiary";
 import AngryImg from "@/app/img/Angry.png";
 import AnxiousImg from "@/app/img/Anxious.png";
 import HappyImg from "@/app/img/Happy.png";
-import InLoveImg from "@/app/img/InLove.png";
+import InLoveImg from "@/app/img/inLove.png";
 import SadImg from "@/app/img/Sad.png";
 import SillyImg from "@/app/img/Silly.png";
 import SoSoImg from "@/app/img/SoSo.png";

@@ -4,7 +4,7 @@ import EmotionButton from "@/components/emotion-Button";
 import howareu from "@/app/img/howareyou.png";
 import Happy from "@/app/img/Happy.png";
 import SoSo from "@/app/img/SoSo.png";
-import InLove from "@/app/img/InLove.png";
+import InLove from "@/app/img/inLove.png";
 import Sad from "@/app/img/Sad.png";
 import Silly from "@/app/img/Silly.png";
 import Anxious from "@/app/img/Anxious.png";
