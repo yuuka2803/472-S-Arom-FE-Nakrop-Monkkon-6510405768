@@ -21,7 +21,7 @@ const moodImages: { [key: string]: string } = {
   Angry: require("@/app/img/Angry.png"),
   Anxious: require("@/app/img/Anxious.png"),
   Happy: require("@/app/img/Happy.png"),
-  InLove: require("@/app/img/InLove.png"),
+  InLove: require("@/app/img/inLove.png"),
   Sad: require("@/app/img/Sad.png"),
   Silly: require("@/app/img/Silly.png"),
   SoSo: require("@/app/img/SoSo.png"),
