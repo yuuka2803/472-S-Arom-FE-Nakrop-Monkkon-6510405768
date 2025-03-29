@@ -1,6 +1,17 @@
 "use client";
+import { MdNavigateNext } from "react-icons/md";
+import { MdNavigateBefore } from "react-icons/md";
 import { useEffect, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@heroui/button";
+import DisplaDiary from "@/components/display-diary";
 import CreateDiary from "@/components/create-diary";
+import useDateDiary from "@/api/diary/useDateDiary";
+import EditDiary from "@/components/edit-diary";
 
 export default function DiaryPage() {
   const [mood, setMood] = useState<string>("");
@@ -18,18 +29,17 @@ export default function DiaryPage() {
     timeZone: "Asia/Bangkok",
   }).format(date);
   const options = { timeZone: "Asia/Bangkok" };
-
   const year = new Intl.DateTimeFormat("en-GB", {
     year: "numeric",
-    ...options,
+    timeZone: "Asia/Bangkok",
   }).format(date);
   const month = new Intl.DateTimeFormat("en-GB", {
     month: "2-digit",
-    ...options,
+    timeZone: "Asia/Bangkok",
   }).format(date);
   const day = new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
-    ...options,
+    timeZone: "Asia/Bangkok",
   }).format(date);
 
   const formattedDateParse = `${year}-${month}-${day}`;
@@ -38,7 +48,7 @@ export default function DiaryPage() {
       <div className="flex w-fit">
         <p className=" text-5xl font-semibold "> {formattedDate} </p>
       </div>
-      <CreateDiary date={formattedDateParse} mood={mood} />
+      <EditDiary date={formattedDateParse} />
     </div>
   );
 }

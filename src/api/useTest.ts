@@ -4,11 +4,10 @@ import testQueryKey from "./testQueryKey";
 
 const getTest = async () => {
   try {
-    const { data } = await axios.get(`/test`);
-    console.log(data);    
+    const { data } = await axios.get(`/test`);  
     return data;    
   } catch (error) {
-    console.log(error);    
+  
   }
 }
 

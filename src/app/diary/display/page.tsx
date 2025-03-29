@@ -9,9 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@nextui-org/button";
-import useDateDiary from "@/api/diary/useDateDiary";
-import useCreateDiary from "@/api/diary/useCreateDiary";
+import { Button } from "@heroui/button";
 import DisplaDiary from "@/components/display-diary";
 
 export default function DiaryPage() {
