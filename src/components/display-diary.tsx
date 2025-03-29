@@ -18,6 +18,7 @@ interface DisplayDiaryProps {
   date: string;
 }
 
+
 const moodImages: { [key: string]: any } = {
   Angry: AngryImg,
   Anxious: AnxiousImg,
@@ -26,6 +27,7 @@ const moodImages: { [key: string]: any } = {
   Sad: SadImg,
   Silly: SillyImg,
   SoSo: SoSoImg,
+
 };
 
 export default function DisplayDiary({ date }: DisplayDiaryProps) {
