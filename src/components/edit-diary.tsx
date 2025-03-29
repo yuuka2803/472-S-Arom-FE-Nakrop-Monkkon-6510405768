@@ -1,13 +1,12 @@
 "use client";
-import useCreateDiary from "@/api/diary/useCreateDiary";
 import { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { IoAddOutline } from "react-icons/io5";
 import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { MoodCard } from "./mood-card";
-import { Diary, CreateDiary as CreateType } from "@/interface/Diary";
+import { Diary, UpdateDiary } from "@/interface/Diary";
 import useUpdateDiaries from "@/api/diary/useUpdate";
 import { jwtDecode } from "jwt-decode";
 import useUserIdDiary from "@/api/diary/useUserIdDiary";
@@ -19,23 +18,21 @@ import SadImg from "@/app/img/Sad.png";
 import SillyImg from "@/app/img/Silly.png";
 import SoSoImg from "@/app/img/SoSo.png";
 
-interface CreateDiaryProps {
-  mood: string;
+interface EditDiaryProps {
   date: string;
 }
 
+const moodImages: { [key: string]: string } = {
+  Angry: AngryImg.src,
+  Anxious: AnxiousImg.src,
+  Happy: HappyImg.src,
+  InLove: InLoveImg.src,
+  Sad: SadImg.src,
+  Silly: SillyImg.src,
+  SoSo: SoSoImg.src,
+};
 
-const moodImages: { [key: string]: any } = {
-  Angry: AngryImg,
-  Anxious: AnxiousImg,
-  Happy: HappyImg,
-  InLove: InLoveImg,
-  Sad: SadImg,
-  Silly: SillyImg,
-  SoSo: SoSoImg,
-
-
-export default function CreateDiary({ date, mood }: CreateDiaryProps) {
+export default function EditDiary({ date }: EditDiaryProps) {
   const [isHasToken, setIsHasToken] = useState(false);
   const [userData, setUserData] = useState<any>();
 
@@ -51,61 +48,47 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
   const { data: diaries, isLoading, error } = useUserIdDiary(userData?.user_id);
   const data = diaries?.find((item) => item.date === `${date}T00:00:00Z`);
   const router = useRouter();
-  const createDiary = useCreateDiary();
-  const [typeFunc, setTypeFunc] = useState<boolean>(false);
+  const updateDiary = useUpdateDiaries();
   const [emotions, setEmotions] = useState<string[]>([]);
   const [description, setDescription] = useState<string>("");
-  const [moodSet, setMoodSet] = useState<string>(mood);
+  const [mood, setMood] = useState<string>("");
   const [imagesDiary, setImagesDiary] = useState<File[]>([]);
   const [imagesDiaryURL, setImagesDiaryURL] = useState<string[]>([]);
-  const [diary, setDiary] = useState<Diary>({
-    id: userData?.user_id,
-    type: "diary",
-    date: date,
-    mood: mood,
-    emotions: [],
-    description: "",
-    user_id: "",
-    images: [],
-  });
-  const [moodImage, setMoodImage] = useState<StaticImageData>(moodImages[mood]);
+  const [diary, setDiary] = useState<Diary>();
+  const [moodImage, setMoodImage] = useState<string>("");
   useEffect(() => {
     if (data) {
-      setTypeFunc(true);
       setEmotions(data.emotions);
       setDescription(data.description);
-      setMoodSet(data.mood);
-      setMoodImage(moodImages[data.mood]);
+      setMood(data.mood);
+      const moodImg = moodImages[data.mood] || "";
+      setMoodImage(moodImg);
       setImagesDiaryURL(data.images);
       setDiary(data);
     }
   }, [data]);
 
-  useEffect(() => {
-    if (mood !== "") {
-      setMoodImage(moodImages[mood]);
-      setMoodSet(mood);
-    }
-  }, [mood]);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  const onSubmit = async () => {
-    const new_diary = {
+  const onUpdate = async () => {
+    const new_diary: UpdateDiary = {
       date: date,
-      mood: moodSet,
+      mood: mood,
       emotions: emotions,
       description: description,
       user_id: userData?.user_id,
+      images_url: imagesDiaryURL,
       images: imagesDiary,
     };
+    console.log(new_diary);
+    console.log(moodImage);
     try {
-      await createDiary.mutateAsync(new_diary);
+      await updateDiary.mutateAsync({ date: date, diary: new_diary });
       router.push("/diary/display");
     } catch (err) {
-      console.error("Failed to create diary entry:", err);
+      console.error("Failed to update diary entry:", err);
     }
   };
 
@@ -119,14 +102,16 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
             router.push(navigateTo);
           }}
         >
-          <img
-            src={moodImage?.src.toString() || ""}
-            alt="mood"
-            width={120}
-            height={100}
-            className="object-cover w-max-[120px] h-max-[100px]"
-          />
-          <p className="text-2xl font-semibold">{moodSet}</p>
+          {moodImage ? (
+            <Image
+              src={moodImage}
+              alt="mood"
+              width={130}
+              height={100}
+              className="object-cover"
+            />
+          ) : null}
+          <p className="text-2xl font-semibold">{mood}</p>
         </button>
         <div className="bg-[#F4ECE5] col-span-2 px-5 py-3 h-full flex flex-col">
           <p className="text-3xl font-medium">Emotions</p>
@@ -134,7 +119,27 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
         </div>
       </div>
       <div className="bg-[#F4ECE5] p-10 flex gap-4">
-        {imagesDiary.map((img, index) => (
+        {imagesDiaryURL?.map((img, index) => (
+          <div key={img} className="relative">
+            <button
+              className="absolute top-0 right-0 bg-white rounded-full p-1"
+              onClick={() => {
+                setImagesDiaryURL(imagesDiaryURL.filter((_, i) => i !== index));
+              }}
+            >
+              <RxCross2 className=" text-red-600  text-xl" />
+            </button>
+            <img
+              key={index}
+              src={img}
+              alt="image"
+              className="object-cover rounded-md mr-2"
+              style={{ width: 140, height: 200 }}
+            />
+          </div>
+        ))}
+
+        {imagesDiary?.map((img, index) => (
           <div key={img.name} className="relative">
             <button
               className="absolute top-0 right-0 bg-white rounded-full p-1"
@@ -190,9 +195,9 @@ export default function CreateDiary({ date, mood }: CreateDiaryProps) {
       </div>
       <Button
         className="w-full bg-[#F4ECE5] text-arom_brown border border-arom_brown mt-4"
-        onClick={onSubmit}
+        onClick={onUpdate}
       >
-        <p className="text-2xl font-semibold">Save</p>
+        <p className="text-2xl font-semibold">Update</p>
       </Button>
     </div>
   );

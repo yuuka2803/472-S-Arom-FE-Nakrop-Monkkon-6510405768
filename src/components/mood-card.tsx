@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useEffect, useState } from "react";
 
@@ -8,7 +8,6 @@ interface MoodCardProps {
 }
 
 export function MoodCard({ setEmotions, emotions }: MoodCardProps) {
-  console.log(emotions);
   const [selectEmotions, setSelectedEmotions] = useState<string[]>(emotions);
   useEffect(() => {
     setSelectedEmotions(emotions);
@@ -24,12 +23,21 @@ export function MoodCard({ setEmotions, emotions }: MoodCardProps) {
       variant="outline"
       className="grid grid-cols-4 gap-x-3 gap-y-2"
       defaultValue={selectEmotions}
-      
       onValueChange={handleValueChange}
     >
       {[
-        "Excited", "Hopeful", "Happy", "Sad", "Tired", "Proud",
-        "Anxious", "Bored", "Relaxed", "Refreshed", "Lonely", "Stressed"
+        "Excited",
+        "Hopeful",
+        "Happy",
+        "Sad",
+        "Tired",
+        "Proud",
+        "Anxious",
+        "Bored",
+        "Relaxed",
+        "Refreshed",
+        "Lonely",
+        "Stressed",
       ].map((mood) => (
         <ToggleGroupItem
           key={mood}

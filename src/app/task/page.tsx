@@ -65,14 +65,17 @@ export default function TaskPage() {
 
   const toggleTaskCompletion = async (taskId: string, complete: boolean) => {
     const updatedTasks = localTasks.map((task) =>
-      task.id === taskId ? { ...task, complete: !complete } : task
+      task.id === taskId ? { ...task, complete: !complete } : task,
     );
     setLocalTasks(updatedTasks);
 
-    const taskCompletionState = updatedTasks.reduce((acc, task) => {
-      acc[task.id] = { complete: task.complete };
-      return acc;
-    }, {} as Record<string, { complete: boolean }>);
+    const taskCompletionState = updatedTasks.reduce(
+      (acc, task) => {
+        acc[task.id] = { complete: task.complete };
+        return acc;
+      },
+      {} as Record<string, { complete: boolean }>,
+    );
 
     localStorage.setItem("tasks", JSON.stringify(taskCompletionState));
 
@@ -83,7 +86,7 @@ export default function TaskPage() {
   };
 
   const filteredTasks = localTasks.filter(
-    (task: Task) => filterTag === "All" || task.tag === filterTag
+    (task: Task) => filterTag === "All" || task.tag === filterTag,
   );
 
   return (
@@ -135,7 +138,7 @@ function TagFilter({
             "rounded-full",
             currentFilter === tag
               ? `${tagColor} text-white`
-              : `text-arom_brown hover:text-arom_brown`
+              : `text-arom_brown hover:text-arom_brown`,
           )}
         >
           {tag}

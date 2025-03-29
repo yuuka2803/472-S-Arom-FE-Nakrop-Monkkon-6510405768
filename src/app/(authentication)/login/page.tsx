@@ -36,7 +36,7 @@ type FormData = {
 };
 
 export default function LoginPage() {
-  const router = useRouter()
+  const router = useRouter();
   const [decodedToken, setDecodedToken] = useState<any>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
 
@@ -59,17 +59,16 @@ export default function LoginPage() {
       const token = localStorage.getItem("jwtToken");
       const decoded = token ? jwtDecode(token) : null;
       setDecodedToken(decoded);
-      console.log(decoded);
 
       setLoginError(null);
-      router.replace("/calendar")
+      router.replace("/calendar");
     } catch (error) {
       console.error(error);
       setLoginError(
-        "Login failed. Please check your credentials and try again."
+        "Login failed. Please check your credentials and try again.",
       );
-      resetField("username")
-      resetField("password")
+      resetField("username");
+      resetField("password");
     }
   };
 
@@ -147,7 +146,9 @@ export default function LoginPage() {
           <p className="text-sm text-muted-foreground">
             Don't have an account?{" "}
             <a
-              onClick={() => {router.replace('signup')}}
+              onClick={() => {
+                router.replace("signup");
+              }}
               className="text-primary hover:underline text-base cursor-pointer"
             >
               Sign up

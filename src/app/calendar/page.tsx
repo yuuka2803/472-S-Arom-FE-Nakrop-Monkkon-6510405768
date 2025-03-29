@@ -30,7 +30,7 @@ import useUserIdTask from "@/api/event/useUserIdTask";
 
 // Type definitions
 interface CalendarItem {
-  id: string;  
+  id: string;
   type: "event" | "diary";
   title?: string;
   start: Date;
@@ -141,7 +141,7 @@ const DiaryComponent = ({ diary }: { diary: Diary }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Image
-          src={imageSrc}
+          src={imageSrc.src}
           width={80}
           height={80}
           alt={`Mood: ${diary.mood}`}
@@ -199,7 +199,7 @@ const CalendarItemWrapper = ({ event }: { event: CalendarItem }) => {
 };
 
 const formatItems = (
-  items: (CalendarItem | Diary | Task)[]
+  items: (CalendarItem | Diary | Task)[],
 ): CalendarItem[] => {
   return items.map((item) => {
     if (item.type === "event") {
@@ -223,7 +223,7 @@ const formatItems = (
 export default function CalendarPage() {
   const [userData, setUserData] = useState<any>();
   const [view, setView] = useState<(typeof Views)[keyof typeof Views]>(
-    Views.MONTH
+    Views.MONTH,
   );
   const [date, setDate] = useState(new Date());
   const [items, setItems] = useState<(Diary | Task)[]>([]);
@@ -246,7 +246,7 @@ export default function CalendarPage() {
     data: tasks,
     isLoading: taskLoading,
     error: taskError,
-  } = useUserIdTask(userData?.user_id)
+  } = useUserIdTask(userData?.user_id);
 
   useEffect(() => {
     if (!diaryLoading && diaries) {
@@ -261,14 +261,21 @@ export default function CalendarPage() {
 
   useEffect(() => {
     const mockItems: (Diary | Task)[] = [];
-  
+
     if (diaries) {
       diaries.forEach((item) => {
         mockItems.push({
           ...item,
           id: item.id,
           date: new Date(item.date),
-          mood: item.mood as "Happy" | "SoSo" | "InLove" | "Sad" | "Silly" | "Anxious" | "Angry",
+          mood: item.mood as
+            | "Happy"
+            | "SoSo"
+            | "InLove"
+            | "Sad"
+            | "Silly"
+            | "Anxious"
+            | "Angry",
           emotions: item.emotions,
           description: item.description,
           type: "diary",
@@ -278,7 +285,7 @@ export default function CalendarPage() {
         });
       });
     }
-    
+
     if (tasks) {
       tasks.forEach((item) => {
         mockItems.push({
@@ -287,23 +294,18 @@ export default function CalendarPage() {
           title: item.title,
           description: item.description,
           complete: item.complete,
-          
+
           start: new Date(item.start),
           end: new Date(item.end),
           tag: item.tag,
           type: "event",
           user_id: item.user_id,
-        })
-      })
+        });
+      });
     }
-  
+
     setItems(mockItems);
   }, [userData, diaries]);
-  
-
-  
-
-  
 
   const allItems = formatItems(items);
 
@@ -313,7 +315,8 @@ export default function CalendarPage() {
         .rbc-calendar {
           background-color: #fffcf9;
           border-radius: 0.5rem;
-          box-shadow: 0 7px 10px 0 rgba(0, 0, 0, 0.1),
+          box-shadow:
+            0 7px 10px 0 rgba(0, 0, 0, 0.1),
             0 3px 5px 0 rgba(0, 0, 0, 0.06);
         }
         .rbc-header {

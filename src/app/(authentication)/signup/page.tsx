@@ -58,16 +58,14 @@ export default function SignUpPage() {
   });
 
   async function onSignUpSubmit(values: TSignUpSchema): Promise<void> {
-    try {      
+    try {
       const signUpData = {
         username: values.username,
         password: values.password,
-        profile_image: values.profileImage
-      }
-      console.log(signUpData);
-      console.log(typeof(signUpData.profile_image));
-      await registerUser(signUpData)
-      router.replace('/login')
+        profile_image: values.profileImage,
+      };
+      await registerUser(signUpData);
+      router.replace("/login");
     } catch (error) {
       console.error(error);
     }

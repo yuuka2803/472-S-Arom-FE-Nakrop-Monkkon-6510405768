@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  next-app-dev:
+    # docker compose up next-app-dev
+    container_name: next-app-dev
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules # Prevents overwriting node_modules with empty host folder
+    environment:
+      - NODE_ENV=development
+    command: pnpm dev
+
+  next-app-prod:
+    # docker compose up next-app-prod
+    container_name: next-app-prod
+    build:
+      context: .
+      dockerfile: docker/prod.Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    command: pnpm start
+
