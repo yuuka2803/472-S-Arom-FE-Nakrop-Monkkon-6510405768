@@ -33,7 +33,7 @@ const moodImages: { [key: string]: any } = {
   Sad: SadImg,
   Silly: SillyImg,
   SoSo: SoSoImg,
-
+}
 
 export default function CreateDiary({ date, mood }: CreateDiaryProps) {
   const [isHasToken, setIsHasToken] = useState(false);
